@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
+
+
+.vehicle-form-container {
+    font-family: poppins;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    width: 100%;
+    margin-left: 230px;
+    color: #003366; 
+  }
+  
+/* title heading */
+  .h1 {
+    text-align: center;
+    font-family: poppins;
+    margin-bottom: 30px;
+    margin-left: 80px;
+    color: #003366; 
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  .form {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .input {
+    margin-left: 200px;
+    width: 300px;
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: white; 
+    border: none;
+    border-bottom: 1px solid #003366; 
+    font-size: 16px;
+    color: #003366;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .input:focus {
+    border-color: #6699cc; 
+    box-shadow: 0 0 8px rgba(102, 153, 204, 0.3); 
+    outline: none;
+  }
+
+    /* textarea */
+  .textarea {
+    display: block;
+    width: 300px; 
+    box-sizing: border-box; 
+    margin-left:  200px;
+    font-size: 16px;
+    color: #003366;
+  }
+
+  .textarea:focus{
+    border-color: #6699cc; 
+    box-shadow: 0 0 8px rgba(102, 153, 204, 0.3); 
+    outline: none;
+  }
+
+  .fileContainer{
+    margin-left: 200px;
+    display: flex;
+    gap: 15px;
+  }
+  .fileInput {
+    width: 200px;
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: white;
+    border: 1px solid #003366;
+    border-radius: 8px;
+    color: #003366;
+    font-size: 16px;
+    display: inline;
+  }
+  
+  .fileInput:hover {
+    border-color: #6699cc;
+  }
+  
+  
+  .button {
+    margin-left: 150px;
+    padding: 14px;
+    background-color: #003366; 
+    color: white;
+    font-size: 18px;
+    font-weight: 400;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .button:hover {
+    background-color: #002244; 
+    transform: translateY(-2px); 
+  }
+
+  .manuDiv{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 80px;
+    margin-top: 30px;
+  }
+
+  .manuButton {
+    position: relative;
+    display: inline-block;
+    padding: 14px;
+    background-color: white; 
+    color: #003366;
+    font-size: 18px;
+    font-weight: 400;
+    border: 2px solid #003366;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border 0.3s ease, width 0.3s ease;
+  }
+  
+  .defaultLabel {
+    opacity: 1;
+  }
+  
+  .hoverLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+  
+  .manuButton:hover {
+    padding: 10px 60px; 
+  }
+
+  .manuButton:hover .defaultLabel {
+    opacity: 0;
+  }
+  
+  .manuButton:hover .hoverLabel {
+    opacity: 1;
+  }
+  
+  
+  .paragraph {
+    text-align: center;
+    color: #003366;
+    font-size: 16px;
+    margin-top: 15px;
+  }
+  
+  @media (max-width: 768px) {
+    .vehicle-form-container {
+      padding: 20px;
+      width: 90%;
+    }
+  
+    .button {
+      font-size: 16px;
+    }
+  
+    .input {
+      font-size: 14px;
+    }
+  }
+  

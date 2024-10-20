@@ -1,0 +1,255 @@
+/* vehicleDisplay.module.css */
+
+.vehicleContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 10px; 
+  transition: filter 0.3s ease;
+}
+
+.blurBackground {
+  filter: blur(5px);
+}
+
+/* Vehicle card stylings */
+.vehicleCard {
+  background-color: #ececec;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(52, 38, 241, 0.1);
+  padding: 20px;
+  width: 350px; 
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vehicleCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.vehicleImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.vehicleName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 10px 0;
+  color: #333;
+}
+
+.vehicleDescription {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.vehiclePrice, 
+.vehicleQuantity, 
+.vehicleSeatCapacity, 
+.vehicleFuelType, 
+.vehicleGearType {
+  font-size: 1rem;
+  margin: 5px 0;
+  color: #555;
+}
+
+/* action button stylings */
+.actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.actions button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+  background-color: #0056b3;
+}
+
+/* edit modal stylings */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal .label {
+  display: block;
+  margin-top: 10px;
+}
+
+.modal .input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.textareaField {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+/* Modal button stylilngs */
+.modal .modalBtn {
+  background-color: #042244;
+  margin: 10px 20px;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal .modalBtn:hover {
+  background-color: #0f3357;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.imagePreviews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.imagePreview {
+  position: relative;
+}
+
+.imagePreview img {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+}
+
+.imageActions {
+  position: absolute;
+  bottom: 10px;
+  left: 5px;
+}
+
+.removeImage {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 2px 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+/* reset primary image styling */
+.removeImageBtn {
+  background-color: transparent;
+  border: 2px solid green; 
+  cursor: pointer; 
+  font-size: 13px; 
+  padding:2px ;
+}
+
+.green {
+  color: green; 
+}
+
+.red {
+  color: red; 
+  border: 2px solid red;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkboxLabel input {
+  margin-right: 5px;
+}
+
+.secondaryImgContainer{
+  padding: 20px 0;
+}
+
+.secondaryImageSection{
+  display: flex;
+  gap: 10px;
+}
+
+.cancelImage{
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0px 2px;
+  cursor: pointer;
+  margin-left: 86px;
+}
+
+
+/* Search and filter styles */
+.searchContainer {
+  display: flex;
+  justify-content: right;
+  margin: 20px;
+  gap: 10px;
+}
+
+.searchInput {
+  max-width: 400px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+} 
+
+.priceDropdown {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
