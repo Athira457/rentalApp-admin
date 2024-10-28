@@ -148,6 +148,17 @@
   font-size: 24px;
   cursor: pointer;
 }
+.topLog{
+  display: flex;
+  justify-content: flex-end;
+}
+.clsbtn{
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 4px 5px;
+}
 
 .imagePreviews {
   display: flex;

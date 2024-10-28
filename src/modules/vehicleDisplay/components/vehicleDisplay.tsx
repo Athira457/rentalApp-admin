@@ -1,6 +1,8 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { GET_ALL_VEHICLES } from '../services/getVehicleQueries';
 import { GET_VEHICLE_BY_ID } from '../services/getSingleVehicle';
+import { DELETE_VEHICLE } from '../services/deleteMutation';
+// import { UPDATE_VEHICLE_MUTATION, UPDATE_PRIMARY_IMAGE} from '../services/updateVehicleMutation';
 import CustomAction from '@/utils/customAction'; 
 import styles from './vehicleDisplay.module.css';
 import Image from 'next/image';
@@ -49,6 +51,7 @@ const VehicleList = () => {
   });
 
   const Svehicle = vehicleData ?.getVehicleImageById;
+  const [deleteVehicleNew] = useMutation(DELETE_VEHICLE);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading vehicles</p>;
@@ -69,13 +72,26 @@ const VehicleList = () => {
     setSelectedVehicle(vehicle);
     setIsModalOpen(true);
   };
-
+ 
+  const handleDelete = async (id: string) => {
+    try {
+      const { data } = await deleteVehicleNew({ variables: { id } });
+      console.log(data);
+    } catch (error) {
+      console.error(`Error deleting vehicle: ${error}`);
+    }
+  };
+  
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedVehicle(null);
     setImageFiles([]);
     setImagePreviews([]);
     setPrimaryImageIndex(null);
+  };
+  
+  const editClose = () => {
+    setIsModalOpen(false); 
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,9 +117,9 @@ const VehicleList = () => {
   };
 
     // Handler for primary image change button click
-    const handleButtonClick = () => {
-      setIsRemoved(prev => !prev);
-    };
+  const handleButtonClick = () => {
+    setIsRemoved(prev => !prev);
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -162,7 +178,7 @@ const VehicleList = () => {
             <p className={styles.vehicleFuelType}>Fuel: {vehicle.fuel}</p>
             <p className={styles.vehicleGearType}>Gear: {vehicle.gear}</p>
             <div className={styles.actions}>
-              <CustomAction onEdit={() => handleEdit(vehicle)} onDelete={() => console.log("delete clicked")} />
+              <CustomAction onEdit={() => handleEdit(vehicle)} onDelete={() => handleDelete(vehicle.id)} />
             </div>
           </div>
         ))}
@@ -172,18 +188,19 @@ const VehicleList = () => {
       {isModalOpen && selectedVehicle && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <h2>Edit Vehicle</h2>
+            <div className={styles.topLog}>              
+              <button onClick={editClose} className={styles.clsbtn}>X</button>
+            </div>
+            <h2>Edit {selectedVehicle.name}</h2>
             <form onSubmit={handleSubmit} className={styles.formWithScroll}>
-              <label>Name:</label>
-              <input type="text" className={styles.input} defaultValue={selectedVehicle.name} required />
               <label>Price:</label>
-              <input type="number" className={styles.input} defaultValue={selectedVehicle.price} required />
+              <input type="number" className={styles.input} value={selectedVehicle.price} required />
               <label>Quantity:</label>
-              <input type="number" className={styles.input} defaultValue={selectedVehicle.quantity} required />
+              <input type="number" className={styles.input} value={selectedVehicle.quantity} required />
               <label>Description:</label>
-              <textarea 
+              <textarea  
                 name="description"
-                defaultValue={selectedVehicle.description}
+                value={selectedVehicle.description}
                 className={styles.textareaField}
                 placeholder="Description"
               />

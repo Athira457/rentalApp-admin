@@ -10,6 +10,8 @@ import car from '../../../themes/images/Car.svg';
 import DisplayIndex from '@/modules/vehicleDisplay/views';
 import ManufactureIndex from '@/modules/manufacturer/views';
 import RegisterIndex from '@/modules/registerCars/views';
+import BookViewIndex from '@/modules/viewBooking/views';
+import PaymentViewIndex from '@/modules/viewTransaction/views';
 
 const SidebarNew: React.FC = () => {
   const [activePage, setActivePage] = useState('car-reports');
@@ -31,18 +33,10 @@ const SidebarNew: React.FC = () => {
     if (activePage === 'car-reports') {
       return <DisplayIndex />;
     } else if (activePage === 'bookings') {
-      return (
-        <div>
-          <h1>Bookings Content</h1>
-          <p>This is the bookings page.</p>
-        </div>
-      );
+      return <BookViewIndex />;
     } else if (activePage === 'transactions') {
       return (
-        <div>
-          <h1>Transactions Content</h1>
-          <p>This is the transactions page.</p>
-        </div>
+        <PaymentViewIndex/>
       );
     } else if (activePage === 'add-manufacturer') {
       return <ManufactureIndex/>;

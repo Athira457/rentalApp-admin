@@ -1,0 +1,38 @@
+/* view patment table stylings */
+.paymentTable {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 20px 40px;
+}
+
+.paymentTable th,
+.paymentTable td {
+  border: 1px solid #232b96;
+  padding: 12px;
+  text-align: left;
+}
+
+.td{
+  width: 150px;
+}
+
+.bid{
+  width: 20px;
+}
+
+.thead {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.tablerow:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tablerow:hover {
+  background-color: #f1f1f1;
+}
+
+.title {
+  margin: 20px 40px;
+}
