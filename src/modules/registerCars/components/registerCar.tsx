@@ -45,6 +45,7 @@ const VehicleRegistrationForm: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
   const [excelData, setExcelData] = useState<ExcelRow[]>([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState<VehicleFormData>({
     manufacturer: '',
@@ -121,7 +122,6 @@ const initialFormData: VehicleFormData = {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-     
     try {
       // Step 1: Register the vehicle
       const {data} = await registerVehicle({
@@ -149,9 +149,10 @@ const initialFormData: VehicleFormData = {
         }
       });
       console.log(imgData);
+      setShowSuccessModal(false);
       
-      setMessage('Vehicle created successfully!');
       console.log('Vehicle and images registered successfully');
+      setShowSuccessModal(true);
       setFormData(initialFormData);
     } catch (error) {
       setMessage('Error registering vehicle !');
@@ -263,8 +264,9 @@ const handleModelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
             },
           });
         } 
-        setMessage("Vehicle details uploaded successfully.");
+        setShowSuccessModal(true);
         setShowModal(!showModal)
+        setFormData(initialFormData);
         setExcelData([]); 
         toggleModal();
       } catch (error) {
@@ -566,7 +568,14 @@ const handleModelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
           Register Vehicle
         </CustomButton>
       </form>
-      {message && <p className={styles.paragraph}>{message}</p>}
+      {showSuccessModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.successModal}>
+            <p>Vehicle created successfully</p>
+            <button onClick={() => setShowSuccessModal(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

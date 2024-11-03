@@ -2,7 +2,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GET_ALL_VEHICLES } from '../services/getVehicleQueries';
 import { GET_VEHICLE_BY_ID } from '../services/getSingleVehicle';
 import { DELETE_VEHICLE } from '../services/deleteMutation';
-// import { UPDATE_VEHICLE_MUTATION, UPDATE_PRIMARY_IMAGE} from '../services/updateVehicleMutation';
+import { UPDATE_VEHICLE_MUTATION, DELETE_IMAGES_MUTATION, UPLOAD_IMAGES_MUTATION } from '../services/updateVehicleMutation';
 import CustomAction from '@/utils/customAction'; 
 import styles from './vehicleDisplay.module.css';
 import Image from 'next/image';
@@ -44,12 +44,15 @@ const VehicleList = () => {
   const [primaryImageIndex, setPrimaryImageIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
-  const [isRemoved, setIsRemoved] = useState(false);
+  const [imagesDeleted, setImagesDeleted] = useState(false);
 
   const { data: vehicleData } = useQuery(GET_VEHICLE_BY_ID, {
     variables: { id: selectedVehicle?.id },
   });
-
+  console.log(imageFiles)
+  const [updateVehicleNew] = useMutation(UPDATE_VEHICLE_MUTATION);
+  const [deleteImages] = useMutation(DELETE_IMAGES_MUTATION);
+  const [updateImagesByVehicleId] = useMutation(UPLOAD_IMAGES_MUTATION);
   const Svehicle = vehicleData ?.getVehicleImageById;
   const [deleteVehicleNew] = useMutation(DELETE_VEHICLE);
 
@@ -68,6 +71,7 @@ const VehicleList = () => {
     return matchesSearchQuery && matchesPriceRange;
   }) || []; 
 
+  // Custom edit and delete button working
   const handleEdit = (vehicle: Vehicle) => {
     setSelectedVehicle(vehicle);
     setIsModalOpen(true);
@@ -77,6 +81,7 @@ const VehicleList = () => {
     try {
       const { data } = await deleteVehicleNew({ variables: { id } });
       console.log(data);
+      window.location.reload();
     } catch (error) {
       console.error(`Error deleting vehicle: ${error}`);
     }
@@ -116,20 +121,57 @@ const VehicleList = () => {
     }
   };
 
-    // Handler for primary image change button click
-  const handleButtonClick = () => {
-    setIsRemoved(prev => !prev);
+  //update function while tap save button
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!selectedVehicle) return;
+    const parsedPrice = parseFloat(selectedVehicle.price as unknown as string);
+    const parsedQuantity = parseInt(selectedVehicle.quantity as unknown as string, 10);
+    try {
+      const { data } = await updateVehicleNew({
+        variables: {
+          id: selectedVehicle.id,
+          price: parsedPrice,
+          quantity: parsedQuantity,
+          description: selectedVehicle.description,
+        },
+      });
+
+
+      const formData = new FormData();
+      imageFiles.forEach((file) => formData.append("images", file));
+
+      const imgData = await updateImagesByVehicleId({
+        variables: {
+          images:  imageFiles,
+          isprimary: primaryImageIndex,
+          vehicleid: selectedVehicle.id,
+        }
+      });
+      closeModal();
+      window.location.reload();     
+      console.log('Vehicle updated successfully:', data,imgData);
+    } catch (error) {
+      console.error('Error updating vehicle:', error);
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('Vehicle updated:', {
-      ...selectedVehicle,
-      primaryImage: primaryImageIndex !== null ? imageFiles[primaryImageIndex] : null,
-      images: imageFiles
-    });
-    closeModal();
-  };
+    // Function to delete all images
+    const handleDeleteImages = async () => {
+      if (!selectedVehicle) return;
+      try {
+          const { data } = await deleteImages({ variables: { vehicleid: selectedVehicle.id } });
+          console.log("id:",data)
+          if (data) {
+              console.log('Images deleted successfully:', data.deleteImages);
+              setImagesDeleted(true);
+          }
+      } catch (error) {
+          console.error('Error deleting images:', error);
+      }
+    };
+  
 
   return (
     <>
@@ -193,24 +235,40 @@ const VehicleList = () => {
             </div>
             <h2>Edit {selectedVehicle.name}</h2>
             <form onSubmit={handleSubmit} className={styles.formWithScroll}>
-              <label>Price:</label>
-              <input type="number" className={styles.input} value={selectedVehicle.price} required />
-              <label>Quantity:</label>
-              <input type="number" className={styles.input} value={selectedVehicle.quantity} required />
-              <label>Description:</label>
-              <textarea  
-                name="description"
-                value={selectedVehicle.description}
-                className={styles.textareaField}
-                placeholder="Description"
-              />
-
+            <label>Price:</label>
+            <input
+              type="number"
+              className={styles.input}
+              value={selectedVehicle.price}
+              onChange={(e) => setSelectedVehicle({ ...selectedVehicle, price: parseFloat(e.target.value) || 0 })}
+              required
+            />
+            
+            <label>Quantity:</label>
+            <input
+              type="text"
+              className={styles.input}
+              value={String(selectedVehicle.quantity)} 
+              onChange={(e) => setSelectedVehicle({ ...selectedVehicle, quantity: parseInt(e.target.value) || 0 })}
+              required
+            />
+            
+            <label>Description:</label>
+            <textarea
+              name="description"
+              value={selectedVehicle.description}
+              onChange={(e) => setSelectedVehicle({ ...selectedVehicle, description: e.target.value })}
+              className={styles.textareaField}
+              placeholder="Description"
+            />
                {/* Primary Image Preview */}
+               <div className={styles.allImageContainer}>
                <div className={styles.primaryImageSection}>
-                  <h3>Primary Image:</h3>
-                  {selectedVehicle.primaryimage?.images ? (
+                  <h3>Images:</h3>
+                  {imagesDeleted ? (
+                      <p>Images deleted.</p> // Single message for both primary and secondary images
+                    ) :selectedVehicle.primaryimage?.images ? (
                     <div className={styles.imageContainer}>
-                      {/* Primary Image Display */}
                       <Image
                         src={selectedVehicle.primaryimage.images}
                         alt="Primary Image"
@@ -218,39 +276,18 @@ const VehicleList = () => {
                         width={120}
                         height={120}
                       />
-
-                      <label className={styles.checkboxLabel}>
-                      <button
-                        type="button"
-                        className={`${styles.removeImageBtn} ${isRemoved ? styles.red : styles.green}`}
-                        onClick={handleButtonClick}
-                      >
-                        &times;
-                      </button>
-                      Change primary image
-                      </label>
+                      
                     </div>
                   ) : (
                     <p>No primary image available.</p>
                   )}
                 </div>
 
-               {/* Secondary Images */}
-                <div className={styles.secondaryImgContainer}>
-                  <h3>Secondary Images:</h3>
+              {/* Secondary Images */}
+              <div className={styles.secondaryImgContainer}>
                   <div className={styles.secondaryImageSection}>
-                    {Svehicle?.secondaryimages?.map((imageObj: { images: string }, index: number) => (
+                    {imagesDeleted ? null : Svehicle?.secondaryimages?.map((imageObj: { images: string }, index: number) => (
                       <div key={index} className={styles.imageContainer}>
-                        <label className={styles.checkboxLabel}>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage(index)}
-                          className={styles.cancelImage}                          
-                        >
-                          &times; 
-                        </button>
-                        </label>
-
                         {/* Secondary Image Display */}
                         <Image
                           src={imageObj.images[0]}
@@ -258,26 +295,15 @@ const VehicleList = () => {
                           width={100}
                           height={100}
                         />
-
-                        {/* Checkbox for Secondary Image */}
-                        <div className={styles.checkboxContainer}>
-                          <label className={styles.checkboxLabel}>
-                            <input
-                              type="checkbox"
-                              checked={primaryImageIndex === index}
-                              onChange={() => handlePrimaryImageChange(index)}
-                            />
-                            Set as Primary
-                          </label>
-                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
-
+                <button type="button" className={styles.cancelImage} onClick={handleDeleteImages}>remove all images</button>
+                </div>
 
               {/* Image upload section */}
-              <label>Upload Images:</label>
+              <label>Upload new Images:</label>
               <input type="file" accept="image/*" multiple onChange={handleImageChange} />
               <div className={styles.imagePreviews}>
                 {imagePreviews.map((preview, index) => (
